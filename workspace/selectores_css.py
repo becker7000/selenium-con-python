@@ -11,12 +11,36 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from pyunitreport import HTMLTestRunner
 
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+
 
 class TestSauceDemoCSS(unittest.TestCase):
 
     def setUp(self):
         """Configuración inicial: abrir Chrome y entrar al sitio"""
-        self.driver = webdriver.Chrome()
+        self.options = Options()
+
+        # Desactiva el Password Manager
+        self.options.add_argument("--disable-password-manager-rewrite")
+        self.options.add_argument("--disable-features=PasswordLeakDetection,PasswordCheck")
+
+        # Asegurar que NO se cargue el perfil de usuario
+        self.options.add_argument("--no-first-run")
+        self.options.add_argument("--no-default-browser-check")
+
+        # Perfil temporal (evita que Chrome use tus preferencias personales)
+        self.options.add_argument("--user-data-dir=/tmp/selenium-profile")
+
+        # Desactiva Credential Manager
+        self.prefs = {
+            "credentials_enable_service": False,
+            "profile.password_manager_enabled": False,
+            "password_manager_leak_detection": False
+        }
+        self.options.add_experimental_option("prefs", self.prefs)
+
+        self.driver = webdriver.Chrome(options=self.options)
         self.driver.get("https://www.saucedemo.com/")
         self.driver.maximize_window()
         self.wait = WebDriverWait(self.driver, 10)
