@@ -6,7 +6,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-
 # ======================================================
 # FIXTURE PYTEST – WEBDRIVER
 # ======================================================
@@ -45,7 +44,7 @@ def test_presencia_visibilidad_clickable(navegador):
         EC.presence_of_element_located((By.NAME, "my-text"))
     )
 
-    assert campo_texto is not None
+    assert campo_texto is not None, "El campo de texto debería existir en el DOM"
     print("✔ Elemento presente en el DOM")
 
     # --------------------------------------------------
@@ -57,7 +56,7 @@ def test_presencia_visibilidad_clickable(navegador):
         EC.visibility_of(campo_texto)
     )
 
-    assert campo_visible.is_displayed()
+    assert campo_visible.is_displayed(), "El campo de texto debería estar visible en pantalla"
     print("✔ Elemento visible")
 
     # Validación de propiedades CSS (típica de examen)
@@ -67,8 +66,8 @@ def test_presencia_visibilidad_clickable(navegador):
     print(f"   CSS display: {display}")
     print(f"   CSS visibility: {visibility}")
 
-    assert display != "none"
-    assert visibility == "visible"
+    assert display != "none", "El campo de texto no debería tener display: none"
+    assert visibility == "visible", "El campo de texto debería tener visibility: visible"
 
     # --------------------------------------------------
     # 3️⃣ CLICKABLE: elemento visible y habilitado
@@ -79,7 +78,7 @@ def test_presencia_visibilidad_clickable(navegador):
         EC.element_to_be_clickable((By.NAME, "my-text"))
     )
 
-    assert campo_clickable.is_enabled()
+    assert campo_clickable.is_enabled(), "El campo de texto debería estar habilitado"
     print("✔ Elemento habilitado y clickable")
 
     campo_clickable.send_keys("Selenium Certification")
@@ -93,9 +92,10 @@ def test_presencia_visibilidad_clickable(navegador):
     checkbox = navegador.find_element(By.ID, "my-check-1")
 
     print(f"   Checkbox seleccionado: {checkbox.is_selected()}")
-    assert checkbox.is_selected() or not checkbox.is_selected()
+    assert checkbox.is_selected() or not checkbox.is_selected(), \
+        "No se pudo evaluar correctamente el estado del checkbox"
     print("✔ Estado del checkbox evaluado")
 
     print("[TEST] Prueba finalizada correctamente")
 
-# Ejecutar con: pytest presencia_visibilidad_click.py
+# pytest presencia_visibilidad_click.py -s
